@@ -10,7 +10,7 @@ class PerceptronNetwork:
         last_perceptron_number = dimension
         for index in range(init_layer_number):
             current_perceptron_number: int = number_of_perceptron_strategy(index)
-            self.perceptron_layers.append(PerceptronLayer(last_perceptron_number, last_perceptron_number,
+            self.perceptron_layers.append(PerceptronLayer(current_perceptron_number, last_perceptron_number,
                                                           steepness_factor, learning_rate))
             last_perceptron_number: int = current_perceptron_number
 

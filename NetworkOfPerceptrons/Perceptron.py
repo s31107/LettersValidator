@@ -1,4 +1,5 @@
-import random, math
+import random
+import math
 
 
 def compute_error_signal_for_last_layer(computed_input: float, correct_output: float) -> float:

@@ -1,4 +1,4 @@
-import Perceptron
+from NetworkOfPerceptrons import Perceptron
 
 
 class PerceptronLayer:
