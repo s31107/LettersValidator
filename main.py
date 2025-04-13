@@ -1,26 +1,35 @@
-import os
+import pickle
+from pathlib import Path
 
 import Gui
-import ImageLoader
-import NetworkOfPerceptrons
+from NetworkOfPerceptrons import PerceptronNetwork, normalize_vector
+import Trainer
 
-train_data_dir = "./train_data"
-eval_data = "./eval_data"
-steepness_factor = 0.1
-learning_rate = 0.1
-init_layer_num = 1
-number_of_perceptron_strategy = lambda x: 26
-dimension = 100 * 100
+perceptron_network_file: str = "./Perceptron.pn"
+matrix_width: int = 64
+matrix_height: int = 64
 
+def serialize_strategy(obj: PerceptronNetwork) -> None:
+    with open(perceptron_network_file, "wb") as file:
+        pickle.dump(obj, file)
 
-perceptronNetwork = NetworkOfPerceptrons.PerceptronNetwork(init_layer_num, dimension, number_of_perceptron_strategy,
-                                                           steepness_factor, learning_rate)
-for label_name in os.listdir(train_data_dir):
-    correct_output = [0] * 26
-    correct_output[ord(label_name) - ord('A')] = 1
-    for file in os.listdir(os.path.join(train_data_dir, label_name)):
-        file_path = os.path.join(train_data_dir, label_name, file)
-        perceptronNetwork.learn(ImageLoader.get_image_matrix(file_path, 100, 100), correct_output)
+def deserialize_strategy() -> PerceptronNetwork:
+    with open(perceptron_network_file, "rb") as file:
+        return pickle.load(file)
 
-print(perceptronNetwork.compute(Gui.get_picture(100, 100)))
-
+if Path(perceptron_network_file).is_file():
+    perceptron: PerceptronNetwork = deserialize_strategy()
+    while True:
+        print(Trainer.convert_result_from_perceptron(
+            perceptron.compute(normalize_vector(Gui.get_picture(matrix_width, matrix_height)))))
+else:
+    perceptron: PerceptronNetwork = PerceptronNetwork(
+        init_layer_number=15,
+        dimension=matrix_width * matrix_height,
+        number_of_perceptron_strategy=lambda _: ord("Z") + 1 - ord("A"),
+        steepness_factor=0.8,
+        learning_rate=0.6
+    )
+    learned_perceptron: PerceptronNetwork = Trainer.train(perceptron, (matrix_width, matrix_height, ))
+    learned_perceptron.normalize_network_weights()
+    serialize_strategy(learned_perceptron)

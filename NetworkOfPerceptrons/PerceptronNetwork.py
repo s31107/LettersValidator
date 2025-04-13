@@ -32,3 +32,7 @@ class PerceptronNetwork:
         for perceptron_layer in self.perceptron_layers:
             last_output: list[float] = perceptron_layer.compute(last_output)
         return last_output
+
+    def normalize_network_weights(self):
+        for item in self.perceptron_layers:
+            item.normalize_layer_weights()

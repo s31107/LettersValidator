@@ -1,8 +1,10 @@
 import tkinter
 from PIL import Image, ImageDraw
 
+import ImageLoader
 
-def get_picture(matrix_width: int, matrix_height: int) -> list[int]:
+
+def get_picture(matrix_width: int, matrix_height: int) -> list[float]:
     root = tkinter.Tk()
     app = LetterDrawer(root)
     root.mainloop()
@@ -46,5 +48,5 @@ class LetterDrawer:
         self._canvas.delete("all")
         self.set_default_x_y()
 
-    def get_image(self, width: int, height: int) -> list[int]:
-        return [int(item == 0) for item in self._image.resize((width, height, )).getdata()]
+    def get_image(self, width: int, height: int) -> list[float]:
+        return ImageLoader.parse_image(self._image, (width, height, ))

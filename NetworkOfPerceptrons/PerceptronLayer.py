@@ -31,3 +31,7 @@ class PerceptronLayer:
     def learn(self, input_vector: list[float], error_signals: list[float]) -> None:
         for index in range(len(self.perceptron_layer)):
             self.perceptron_layer[index].learn(input_vector, error_signals[index])
+
+    def normalize_layer_weights(self):
+        for item in self.perceptron_layer:
+            item.normalize_weights()
