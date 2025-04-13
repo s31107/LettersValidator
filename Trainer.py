@@ -4,7 +4,7 @@ import ImageLoader
 from NetworkOfPerceptrons import PerceptronNetwork
 import os
 
-acc: float = 30
+acc: float = 91.
 train_data_dir = "./train_data"
 eval_data = "./eval_data"
 
