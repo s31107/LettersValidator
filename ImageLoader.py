@@ -20,4 +20,4 @@ def parse_image(image: Image, size: tuple[int, int]):
         image, (delta_w // 2, delta_h // 2, delta_w - delta_w // 2, delta_h - delta_h // 2), fill=255)
 
     image = image.resize(size, Image.LANCZOS)
-    return list(image.point(lambda p: 0.0 if p < threshold else 1.0).getdata())
+    return list(image.point(lambda p: 1.0 if p < threshold else 0.0).getdata())

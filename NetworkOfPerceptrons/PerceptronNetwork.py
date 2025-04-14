@@ -4,12 +4,12 @@ from NetworkOfPerceptrons.PerceptronLayer import PerceptronLayer
 
 
 class PerceptronNetwork:
-    def __init__(self, init_layer_number: int, dimension: int, number_of_perceptron_strategy: Callable[[int], int],
+    def __init__(self, init_layer_number: int, dimension: int, number_of_perceptron_strategy: Callable[[int, int], int],
                  steepness_factor: float, learning_rate: float):
         self.perceptron_layers = []
         last_perceptron_number = dimension
         for index in range(init_layer_number):
-            current_perceptron_number: int = number_of_perceptron_strategy(index)
+            current_perceptron_number: int = number_of_perceptron_strategy(index, init_layer_number)
             self.perceptron_layers.append(PerceptronLayer(current_perceptron_number, last_perceptron_number,
                                                           steepness_factor, learning_rate))
             last_perceptron_number: int = current_perceptron_number

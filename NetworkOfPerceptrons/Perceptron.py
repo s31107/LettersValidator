@@ -21,9 +21,9 @@ class Perceptron:
     def __init__(self, dimension: int, steepness_factor: float, learning_rate: float):
         assert 0 < steepness_factor <= 1
         assert 0 < learning_rate <= 1
-        assert dimension > 1
-        self._weights = [random.random() for _ in range(dimension)]
-        self._threshold = random.random()
+        assert dimension >= 1
+        self._weights = [random.uniform(-2, 2) for _ in range(dimension)]
+        self._threshold = random.uniform(-2, 2)
         self._steepness_factor: float = steepness_factor
         self._learning_rate: float = learning_rate
 
