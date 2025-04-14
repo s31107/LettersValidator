@@ -4,7 +4,8 @@ import ImageLoader
 from NetworkOfPerceptrons import PerceptronNetwork
 import os
 
-acc: float = 91.
+acc: float = 95.
+max_epoch_number: int = 30
 train_data_dir = "./train_data"
 eval_data = "./eval_data"
 output_dimension = ord("Z") + 1 - ord("A")
@@ -14,8 +15,7 @@ def get_all_images_with_result(path: str, size: tuple[int, int]) -> list[tuple[s
     list_files = []
     for label_name in os.listdir(path):
         for file in os.listdir(path + "/" + label_name):
-            list_files.append(
-                (label_name, ImageLoader.get_image_matrix(os.path.join(path, label_name, file), size)))
+            list_files.append((label_name, ImageLoader.get_image_matrix(os.path.join(path, label_name, file), size)))
     return list_files
 
 
@@ -23,8 +23,10 @@ def train(perceptron_network: PerceptronNetwork, size: tuple[int, int]) -> Perce
     all_train_files: list[tuple[str, list[float]]] = get_all_images_with_result(train_data_dir, size)
     all_eval_files: list[tuple[str, list[float]]] = get_all_images_with_result(eval_data, size)
     computed_acc: int = 0
-    while computed_acc <= acc:
+    epoch_number: int = 0
+    while computed_acc <= acc and epoch_number < max_epoch_number:
         # Learning:
+        print(f"Epoch number: {epoch_number}")
         random.shuffle(all_train_files)
         for train_unit in all_train_files:
             correct_output: list[int] = [0] * output_dimension
@@ -32,6 +34,7 @@ def train(perceptron_network: PerceptronNetwork, size: tuple[int, int]) -> Perce
             perceptron_network.learn(train_unit[1], correct_output)
         # Evaluating:
         computed_acc = evaluate_perceptron_network(perceptron_network, all_eval_files)
+        epoch_number += 1
     return perceptron_network
 
 
@@ -42,8 +45,8 @@ def evaluate_perceptron_network(
     for eval_unit in all_eval_files:
         computed_letter: str = convert_result_from_perceptron(perceptron_network.compute(eval_unit[1]))
         computed_acc += int(computed_letter == eval_unit[0])
-    computed_acc = (computed_acc / len(all_eval_files)) * 100
-    print(f"Epoch acc = {computed_acc}")
+    computed_acc = computed_acc * 100. / len(all_eval_files)
+    print(f"Epoch acc = {computed_acc:.2f}%")
     return computed_acc
 
 

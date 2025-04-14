@@ -1,3 +1,4 @@
+import sys
 import tkinter
 from PIL import Image, ImageDraw
 
@@ -32,6 +33,8 @@ class LetterDrawer:
         self._image = Image.new("L", self._canvas_size, color="white")
         self._image_draw = ImageDraw.Draw(self._image)
 
+        root.protocol("WM_DELETE_WINDOW", sys.exit)
+
     def set_default_x_y(self) -> None:
         self._last_x: None = None
         self._last_y: None = None
@@ -40,7 +43,7 @@ class LetterDrawer:
         if self._last_x is not None and self._last_y is not None:
             self._canvas.create_line(self._last_x, self._last_y, event.x, event.y,
                                      width=6, fill="black", capstyle=tkinter.ROUND, smooth=True)
-            self._image_draw.line([self._last_x, self._last_y, event.x, event.y])
+            self._image_draw.line([self._last_x, self._last_y, event.x, event.y], width=6, fill="black")
         self._last_x: float = event.x
         self._last_y: float = event.y
 

@@ -1,6 +1,8 @@
 import random
 import math
 
+_init_compartment = (-2, 2, )
+
 
 def compute_error_signal_for_last_layer(computed_input: float, correct_output: float) -> float:
     assert 0 <= correct_output <= 1
@@ -12,26 +14,18 @@ def compute_error_signal_for_hide_layer(computed_input: float,
     return computed_input * (1 - computed_input) * sum(item[0] * item[1] for item in error_signals_from_other_layer)
 
 
-def normalize_vector(vector: list[float]) -> list[float]:
-    norm: float = math.sqrt(sum(map(lambda x: x ** 2, vector)))
-    return [item / norm if norm > 0 else 0 for item in vector]
-
-
 class Perceptron:
     def __init__(self, dimension: int, steepness_factor: float, learning_rate: float):
         assert 0 < steepness_factor <= 1
         assert 0 < learning_rate <= 1
         assert dimension >= 1
-        self._weights = [random.uniform(-2, 2) for _ in range(dimension)]
-        self._threshold = random.uniform(-2, 2)
+        self._weights = [random.uniform(*_init_compartment) for _ in range(dimension)]
+        self._threshold = random.uniform(*_init_compartment)
         self._steepness_factor: float = steepness_factor
         self._learning_rate: float = learning_rate
 
     def get_weights(self) -> list[float]:
         return self._weights
-
-    def normalize_weights(self):
-        self._weights = normalize_vector(self._weights)
 
     def compute(self, vector_input: list[float]) -> float:
         assert len(vector_input) == len(self._weights)

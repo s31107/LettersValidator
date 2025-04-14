@@ -1,18 +1,15 @@
-from typing import Callable
-
 from NetworkOfPerceptrons.PerceptronLayer import PerceptronLayer
 
 
 class PerceptronNetwork:
-    def __init__(self, init_layer_number: int, dimension: int, number_of_perceptron_strategy: Callable[[int, int], int],
+    def __init__(self, dimension: int, number_of_perceptron_strategy: list[int],
                  steepness_factor: float, learning_rate: float):
         self.perceptron_layers = []
         last_perceptron_number = dimension
-        for index in range(init_layer_number):
-            current_perceptron_number: int = number_of_perceptron_strategy(index, init_layer_number)
-            self.perceptron_layers.append(PerceptronLayer(current_perceptron_number, last_perceptron_number,
+        for index in range(len(number_of_perceptron_strategy)):
+            self.perceptron_layers.append(PerceptronLayer(number_of_perceptron_strategy[index], last_perceptron_number,
                                                           steepness_factor, learning_rate))
-            last_perceptron_number: int = current_perceptron_number
+            last_perceptron_number: int = number_of_perceptron_strategy[index]
 
     def learn(self, input_vector: list[float], correct_output: list[float]) -> None:
         perceptron_output: list[list[float]] = [input_vector]
@@ -32,7 +29,3 @@ class PerceptronNetwork:
         for perceptron_layer in self.perceptron_layers:
             last_output: list[float] = perceptron_layer.compute(last_output)
         return last_output
-
-    def normalize_network_weights(self):
-        for item in self.perceptron_layers:
-            item.normalize_layer_weights()
